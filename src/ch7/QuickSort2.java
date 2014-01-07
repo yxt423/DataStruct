@@ -1,13 +1,13 @@
-// quick sort 1, use the right value as pivot.
+// quick sort 2, use the medium value of left, right and middle as pivot.
 
 package ch7;
 
-public class QuickSort {
+public class QuickSort2 {
 
 	public static void main(String[] args){
     int maxSize = 16;             // array size
-    QuickS arr;
-    arr = new QuickS(maxSize);  // create array
+    QuickS2 arr;
+    arr = new QuickS2(maxSize);  // create array
 
     for(int j=0; j<maxSize; j++)  // fill array with
        {                          // random numbers
@@ -21,11 +21,11 @@ public class QuickSort {
 
 }
 
-class QuickS{
+class QuickS2{
 	   private long[] theArray;          // ref to array theArray
 	   private int nElems;               // number of data items
 	   
-	   public QuickS(int max)          // constructor
+	   public QuickS2(int max)          // constructor
 	      {
 	      theArray = new long[max];      // create the array
 	      nElems = 0;                    // no items yet
@@ -48,30 +48,65 @@ class QuickS{
 	      }
 	   
 	   public void recQuickSort(int left, int right){
-		   if(right - left <= 0)
-			   return;
+		   if(right - left < 3){
+			   manualSort(left,right);
+		   }
 		   else{
-			   long pivot = theArray[right];
-			   int partition = partitionIt(left, right,pivot);
-			   recQuickSort(left,partition -1);
-			   recQuickSort(partition+1,right);
+			   long medium = mediumOf3(left, right);
+			   int partition = partitionIt(left, right,medium);
+			   recQuickSort(left,partition - 1);
+			   recQuickSort(partition + 1,right);
 		   }
 	   }
 	   
 	   public int partitionIt(int left, int right, long pivot){
-		   int leftP = left-1;
-		   int rightP = right;
+		   int leftP = left;
+		   int rightP = right -1;
 		   
 		   while(leftP < rightP){
 			   while(theArray[++leftP]<pivot) // do not need 'left<nElems', because theArray[right] is partition.
 				   ;
-			   while(rightP > left && theArray[--rightP]>pivot)
+			   while(theArray[--rightP]>pivot)
 				   ;
 			   if(leftP < rightP)
 				   swap(leftP, rightP);
 		   }
-		   swap(leftP, right);
+		   swap(leftP, right -1);
 		   return leftP;
+	   }
+	   
+	   public void manualSort(int left, int right){
+		   int n = right - left;
+		   if(n == 0){
+			   return;
+		   }
+		   else if(n ==1){
+			   if(theArray[left]>theArray[right])
+				   swap(left, right);
+		   }
+		   else if(n == 2){
+			   int middle = left + 1;
+			   if(theArray[left]>theArray[right])
+				   swap(left,right);
+			   if(theArray[middle]>theArray[right])
+				   swap(middle,right);
+			   if(theArray[left]>theArray[middle])
+				   swap(left,middle);
+		   }
+	   }
+	   
+	   public long mediumOf3(int left, int right){
+		   int middle = (left + right)/2;
+		   
+		   if(theArray[left] > theArray[right])
+			   swap(left, right);
+		   if(theArray[middle] > theArray[right])
+			   swap(middle, right);
+		   if(theArray[left] > theArray[middle])
+			   swap(left, middle);
+		   
+		   swap(middle, right-1);      // put pivot on right
+		   return theArray[right-1];
 	   }
 	   
 	   public void swap(int left, int right){
