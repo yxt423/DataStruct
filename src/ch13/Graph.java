@@ -65,7 +65,6 @@ public class Graph {
     	vertexList[0].wasVisited = true;
     	displayVertex(0);
     	theQueue.insert(0);
-    	int v2;
     	
     	while(!theQueue.isEmpty()){
     		int v1 = theQueue.remove();
@@ -88,6 +87,32 @@ public class Graph {
     public void addEdge(int start, int end){
     	adjMat[start][end] = 1;
     	adjMat[end][start] = 1;
+    }
+    
+    public void mst(){
+    	vertexList[0].wasVisited = true;
+    	theStack.push(0);
+    	
+    	while(!theStack.isEmpty()){
+    		int currentVertex = theStack.peek();
+    		int nextVertex = getAdjUnvisitedVertex(currentVertex);
+    		
+    		if(nextVertex == -1){
+    			theStack.pop();
+    		}
+    		else{
+    			vertexList[nextVertex].wasVisited = true;
+    			theStack.push(nextVertex);
+    			
+    			displayVertex(currentVertex);
+    			displayVertex(nextVertex);
+    			System.out.print(" ");
+    		}
+    	}
+    	
+    	for(int i=0; i<nVerts; i++){
+    		vertexList[i].wasVisited = false;
+    	}
     }
     
     public void displayVertex(int v){
